@@ -152,6 +152,11 @@ namespace Agenda{
         HTML::set_title(t1, a.name);
         HTML::set_height(t1, 1);
         HTML::append(p, t1);
+
+        HTML::Text t2;
+        HTML::set_text(t2, a.description);
+        HTML::append(p, t2);
+
         HTML::Table t;
         HTML::set_headers(t, {"Name", "Description", "Start", "End"});
         for (Event::Event e: a.events){

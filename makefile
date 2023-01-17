@@ -1,6 +1,5 @@
 export CXX=g++ #compiler, change it if you don't use g++
 export CXXFLAGS= -Wall -std=c++17 #compiler flags
-export EXEC=main #executable name
 
 SRC= $(wildcard *.cpp) $(wildcard */*.cpp) #all source files
 OBJ= $(SRC:.cpp=.o) #all object files
@@ -10,11 +9,13 @@ ifeq ($(OS),Windows_NT)
 	RMCMD_REC = /s
 	CDCMD = dir
 	OPERATING_SYSTEM := Windows
+	export EXEC = main.exe
 else
     RMCMD = rm -f
 	RMCMD_REC = -r
 	CDCMD = cd
 	OPERATING_SYSTEM := Linux
+	export EXEC = main.out
 endif
 
 all: $(EXEC)
@@ -61,4 +62,4 @@ clean:
 
 
 mrproper: clean
-	$(RMCMD) $(EXEC).*
+	$(RMCMD) $(EXEC)
