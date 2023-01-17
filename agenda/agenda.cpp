@@ -5,6 +5,7 @@
 #include "../datetime/data.hpp"
 #include "../file/file.hpp"
 #include "../utility/utility.hpp"
+#include "../html/html.hpp"
 
 #include <random>
 #include <queue>
@@ -145,13 +146,22 @@ namespace Agenda{
 
     //export the agenda a in a html file with path
     void exportHTML(Agenda a, fs::path& path){
-        std::string s = "<!DOCTYPE html>\n<html>\n<head>\n\t<title>" + a.name + "</title>\n</head>\n<body>\n\t<h1>" + a.name + "</h1>\n\t<p>" + a.description + "</p>\n\t<h2>Events</h2>\n\t<ul>\n";
+        HTML::Page p;
+        HTML::set_title(p, a.name);
+        HTML::Title t1;
+        HTML::set_title(t1, a.name);
+        HTML::set_height(t1, 1);
+        HTML::append(p, t1);
+        HTML::Table t;
+        HTML::set_headers(t, {"Name", "Description", "Start", "End"});
         for (Event::Event e: a.events){
-            s += "\t\t<li>\n\t\t\t<h3>" + e.name + "</h3>\n\t\t\t<p>" + e.description + "</p>\n\t\t\t<p>Start: " + Datetime::to_string(e.start) + "</p>\n\t\t\t<p>End: " + Datetime::to_string(e.end) + "</p>\n\t\t</li>\n";
+            HTML::add_row(t, {e.name, e.description, Datetime::to_string(e.start, "fr"), Datetime::to_string(e.end, "fr")});
         }
-        s += "\t</ul>\n</body>\n</html>";
-        path = File::setextension(path, ".html");
-        File::write(path, s);
+        HTML::append(p, t);
+        path = File::setextension(path, "html");
+        fs::path css = "data/html/style.css";
+        HTML::add_stylesheet(p, fs::absolute(css));
+        HTML::save(p, path);
     }
 
 }

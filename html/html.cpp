@@ -6,6 +6,8 @@
 #include <vector>
 #include <filesystem>
 
+#include <iostream>
+
 namespace fs = std::filesystem;
 
 namespace HTML{
@@ -62,6 +64,11 @@ namespace HTML{
         return s;
     }
 
+    std::string to_string(const Title& t){
+        std::string s = R"(<h)" + std::to_string(t.height) + ">" + t.title + R"(</h)" + std::to_string(t.height) + ">";
+        return s;
+    }
+
     void append(Page& p, const Table& t){
         p.body += to_string(t);
     }
@@ -86,6 +93,10 @@ namespace HTML{
         p.body += s;
     }
 
+    void append(Page& p, const Title& t){
+        p.body += to_string(t);
+    }
+
     void add_row(Table& t, const std::vector<std::string>& row){
         t.rows.push_back(row);
     }
@@ -98,8 +109,17 @@ namespace HTML{
         p.stylesheets.push_back(stylesheet);
     }
 
+    void add_stylesheet(Page& p, const fs::path& stylesheet){
+        std::cerr << stylesheet << std::endl;
+        p.stylesheets.push_back(File::read(stylesheet));
+    }
+
     void add_script(Page& p, const std::string& script){
         p.scripts.push_back(script);
+    }
+
+    void add_script(Page& p, const fs::path& script){
+        p.scripts.push_back(File::read(script));
     }
 
     void set_author(Page& p, const std::string& author){
@@ -133,6 +153,10 @@ namespace HTML{
     void set_title(Page& p, const std::string& title){
         p.title = title;
     }
+
+    void set_title(Title& l, const std::string& title){
+        l.title = title;
+    }
     
     void set_description(Image& i, const std::string& description){
         i.description = description;
@@ -152,5 +176,13 @@ namespace HTML{
 
     void set_headers(Table& t, const std::vector<std::string>& headers){
         t.headers = headers;
+    }
+
+    void set_height(Title& t, const unsigned char height){
+        t.height = height;
+    }
+
+    void save(const Page& p, const fs::path& path){
+        File::write(path, to_string(p));
     }
 }

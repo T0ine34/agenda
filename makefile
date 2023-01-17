@@ -6,11 +6,13 @@ SRC= $(wildcard *.cpp) $(wildcard */*.cpp) #all source files
 OBJ= $(SRC:.cpp=.o) #all object files
 
 ifeq ($(OS),Windows_NT)
-    RMCMD = del /s /q
+    RMCMD = del /q
+	RMCMD_REC = /s
 	CDCMD = dir
 	OPERATING_SYSTEM := Windows
 else
-    RMCMD = rm -rf
+    RMCMD = rm -f
+	RMCMD_REC = -r
 	CDCMD = cd
 	OPERATING_SYSTEM := Linux
 endif
@@ -29,7 +31,7 @@ $(EXEC): $(OBJ)
 main: $(wildcard *.hpp) $(wildcard */*.hpp) #recompile if headers change
 
 #agenda
-agenda/agenda.o: agenda/agenda.hpp datetime/datetime.hpp datetime/data.hpp file/file.hpp utility/utility.hpp
+agenda/agenda.o: agenda/agenda.hpp datetime/datetime.hpp datetime/data.hpp file/file.hpp utility/utility.hpp html/html.hpp
 
 #datetime
 datetime/datetime.o: datetime/datetime.hpp datetime/data.hpp datetime/deltatime.hpp
@@ -55,7 +57,7 @@ utility/utility.o: utility/utility.hpp
 .PHONY: clean mrproper
 
 clean:
-	$(RMCMD) *.o
+	$(RMCMD) $(RMCMD_REC) *.o
 
 
 mrproper: clean
