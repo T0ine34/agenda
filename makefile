@@ -61,4 +61,4 @@ clean:
 
 
 mrproper: clean
-	$(RMCMD) $(EXEC)
+	$(RMCMD) $(EXEC).*

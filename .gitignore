@@ -1,0 +1,5 @@
+
+*.o
+*.agenda
+*.code-workspace
+*.exe

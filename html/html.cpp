@@ -55,10 +55,10 @@ namespace HTML{
     std::string to_string(const Page& p){
         std::string s = R"(<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="ie=edge"><title>)" + p.title + R"(</title>)";
         for(const std::string& stylesheet : p.stylesheets){
-            s += R"(<link rel="stylesheet" href=")" + stylesheet + R"(">)";
+            s += R"(<style>)" + stylesheet + R"(</style>)";
         }
         for(const std::string& script : p.scripts){
-            s += R"(<script src=")" + script + R"("></script>)";
+            s += R"(<script>)" + script + R"(</script>)";
         }
         s += R"(<link rel="icon" href=")" + p.icon.string() + R"("><meta name="author" content=")" + p.author + R"("></head><body>)" + p.body + "</body></html>";
         return s;
