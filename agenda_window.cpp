@@ -407,22 +407,76 @@ namespace Datetime_Input{
     std::string create_window(Datetime_Input::Date_Input& date_input, std::string lang){
         unsigned width = 27;
         (date_input.title.size() > width) ? width = date_input.title.size() : width = width;
+        std::vector<int> spaces = Utility::divide(width-5, 6); //corresponds to the number of spaces between each column
         std::string output = "┌";
-        for(std::size_t i = 0; i < width; i++){
+        for(unsigned i = 0; i < width; i++){
             output += "─";
         }
         output += "┐\n│";
-        for(std::size_t i = 0; i < round(float(width - date_input.title.size()) / 2); i++){
+        for(int i = 0; i < round(float(width - Utility::getNbchars(date_input.title)) / 2); i++){
             output += " ";
         }
         output += date_input.title;
-        for(std::size_t i = 0; i < round(float(width - date_input.title.size()) / 2)-1; i++){
+        for(int i = 0; i < round(float(width - Utility::getNbchars(date_input.title)) / 2)-1; i++){
             output += " ";
         }
-        output += "│\n├────────┬────────┬─────────┤\n│";
-        output += Utility::extend(Date_Data::year.at(lang), 8, ' ', true) + "│" + Utility::extend(Date_Data::month.at(lang), 8, ' ', true) + "│" + Utility::extend(Date_Data::day.at(lang), 9, ' ', true) + "│";
-        output += "\n│        │        │         │";
-        output += "\n│   ꓥ    │   ꓥ    │    ꓥ    │\n│  "; 
+        output += "│\n├";
+        for(int i = 0; i < spaces[0]+1+spaces[1]; i++){
+            output += "─";
+        }
+        output += "┬";
+        for(int i = 0; i < spaces[2]+1+spaces[3]; i++){
+            output += "─";
+        }
+        output += "┬";
+        for(int i = 0; i < spaces[4]+1+spaces[5]; i++){
+            output += "─";
+        }
+        output += "┤\n│ ";
+        output += Utility::extend(Date_Data::year.at(lang), spaces[0]+1+spaces[1], ' ', true) + "│" + Utility::extend(Date_Data::month.at(lang), spaces[2]+1+spaces[3], ' ', true) + "│" + Utility::extend(Date_Data::day.at(lang), spaces[4]+1+spaces[5], ' ', true) + "│";
+        output += "\n│";
+        for(int i = 0; i < spaces[0]+1+spaces[1]; i++){
+            output += " ";
+        }
+        output += "│";
+        for(int i = 0; i < spaces[2]+1+spaces[3]; i++){
+            output += " ";
+        }
+        output += "│";
+        for(int i = 0; i < spaces[4]+1+spaces[5]; i++){
+            output += " ";
+        }
+        output += "│";
+
+        output += "\n│";
+        for(int i = 0; i < spaces[0]; i++){
+            output += " ";
+        }
+        output += "ꓥ";
+        for(int i = 0; i < spaces[1]; i++){
+            output += " ";
+        }
+        output += "│";
+        for(int i = 0; i < spaces[2]; i++){
+            output += " ";
+        }
+        output += "ꓥ";
+        for(int i = 0; i < spaces[3]; i++){
+            output += " ";
+        }
+        output += "│";
+        for(int i = 0; i < spaces[4]; i++){
+            output += " ";
+        }
+        output += "ꓥ";
+        for(int i = 0; i < spaces[5]; i++){
+            output += " ";
+        }
+        output += "│\n│";
+        for(int i = 0; i < spaces[0]-1; i++){
+            output += " ";
+        }
+
         if (int(date_input.selected) == 0){
             output += "\033[30;47m";
         }
@@ -430,7 +484,13 @@ namespace Datetime_Input{
         if (int(date_input.selected) == 0){
             output += "\033[0m";
         }
-        output += "  │   ";
+        for(int i = 0; i < spaces[1]-2; i++){
+            output += " ";
+        }
+        output += "│";
+        for(int i = 0; i < spaces[2]; i++){
+            output += " ";
+        }
         if (int(date_input.selected) == 1){
             output += "\033[30;47m";
         }
@@ -438,7 +498,13 @@ namespace Datetime_Input{
         if (int(date_input.selected) == 1){
             output += "\033[0m";
         }
-        output += "   │    ";
+        for(int i = 0; i < spaces[3]-1; i++){
+            output += " ";
+        }
+        output += "│";
+        for(int i = 0; i < spaces[4]-1; i++){
+            output += " ";
+        }
         if (int(date_input.selected) == 2){
             output += "\033[30;47m";
         }
@@ -446,8 +512,47 @@ namespace Datetime_Input{
         if (int(date_input.selected) == 2){
             output += "\033[0m";
         }
-        output += "   │\n│   ꓦ    │   ꓦ    │    ꓦ    │\n└";
-        output += "────────┴────────┴─────────┘\n";
+        for(int i = 0; i < spaces[5]; i++){
+            output += " ";
+        }
+        output += "│\n│";
+        //"   ꓦ    │   ꓦ    │    ꓦ    │\n└";
+        for(int i = 0; i < spaces[0]; i++){
+            output += " ";
+        }
+        output += "ꓦ";
+        for(int i = 0; i < spaces[1]; i++){
+            output += " ";
+        }
+        output += "│";
+        for(int i = 0; i < spaces[2]; i++){
+            output += " ";
+        }
+        output += "ꓦ";
+        for(int i = 0; i < spaces[3]; i++){
+            output += " ";
+        }
+        output += "│";
+        for(int i = 0; i < spaces[4]; i++){
+            output += " ";
+        }
+        output += "ꓦ";
+        for(int i = 0; i < spaces[5]; i++){
+            output += " ";
+        }
+        output += "│\n└";
+        for(int i = 0; i < spaces[0]+1+spaces[1]; i++){
+            output += "─";
+        }
+        output += "┴";
+        for(int i = 0; i < spaces[2]+1+spaces[3]; i++){
+            output += "─";
+        }
+        output += "┴";
+        for(int i = 0; i < spaces[4]+1+spaces[5]; i++){
+            output += "─";
+        }
+        output += "┘\n";
 
         return output;
     }
@@ -457,15 +562,15 @@ namespace Datetime_Input{
         unsigned width = 19;
         (time_input.title.size() > width) ? width = time_input.title.size() : width = width;
         std::string output = "┌";
-        for(std::size_t i = 0; i < width; i++){
+        for(unsigned i = 0; i < width; i++){
             output += "─";
         }
         output += "┐\n│";
-        for(std::size_t i = 0; i < round(float(width - time_input.title.size()) / 2); i++){
+        for(int i = 0; i < round(float(width - time_input.title.size()) / 2); i++){
             output += " ";
         }
         output += time_input.title;
-        for(std::size_t i = 0; i < round(float(width - time_input.title.size()) / 2)-1; i++){
+        for(int i = 0; i < round(float(width - time_input.title.size()) / 2)-1; i++){
             output += " ";
         }
         output += "│\n├─────────┬─────────┤\n│";
