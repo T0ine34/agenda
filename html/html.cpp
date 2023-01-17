@@ -9,44 +9,6 @@
 namespace fs = std::filesystem;
 
 namespace HTML{
-    struct Page{
-        std::string title;
-        fs::path icon;
-        std::vector<std::string> stylesheets;
-        std::vector<std::string> scripts;
-        std::string author;
-        std::string body;
-    };
-
-    struct Table{
-        std::string title;
-        std::vector<std::string> headers;
-        std::vector<std::vector<std::string>> rows;
-    };
-
-    struct List{
-        std::string title;
-        bool ordered = false;
-        std::vector<std::string> items;
-    };
-
-    struct Image{
-        std::string title;
-        fs::path path;
-        std::string description;
-    };
-
-    struct Text{
-        std::string title;
-        std::string text;
-    };
-
-    struct Link{
-        std::string title;
-        std::string url;
-    };
-
-    //write without newlines
     std::string to_string(const Table& t){
         std::string s = R"(<table><caption>)" + t.title + R"(</caption><tr>)";
         for(const auto& header : t.headers){
