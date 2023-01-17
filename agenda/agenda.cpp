@@ -70,9 +70,9 @@ namespace Agenda{
             event.pop();
             e.description = event.front();
             event.pop();
-            e.start = Datetime::from_string(event.front(), "yyyy-MM-dd HH:mm");
+            e.start = Datetime::from_string(event.front(), "%d-%m-%Y-%H-%M");
             event.pop();
-            e.end = Datetime::from_string(event.front(), "yyyy-MM-dd HH:mm");
+            e.end = Datetime::from_string(event.front(), "%d-%m-%Y-%H-%M");
             event.pop();
             a.events.push_back(e);
             lines.pop();
@@ -107,7 +107,7 @@ namespace Agenda{
         std::string path = "data/agenda/" + a.UID + ".agenda";
         std::string s = a.UID + "\n" + a.name + "\n" + a.description + "\n";
         for (Event::Event e: a.events){
-            s += e.UID + "\t" + e.name + "\t" + e.description + "\t" + Datetime::to_string(e.start) + "\t" + Datetime::to_string(e.end) + "\n";
+            s += e.UID + "\t" + e.name + "\t" + e.description + "\t" + Datetime::format(e.start, "%d-%m-%Y-%H-%M") + "\t" + Datetime::format(e.end, "%d-%m-%Y-%H-%M") + "\n";
         }
         File::write(path, s);
     }
@@ -160,7 +160,7 @@ namespace Agenda{
         HTML::Table t;
         HTML::set_headers(t, {"Name", "Description", "Start", "End"});
         for (Event::Event e: a.events){
-            HTML::add_row(t, {e.name, e.description, Datetime::to_string(e.start, "fr"), Datetime::to_string(e.end, "fr")});
+            HTML::add_row(t, {e.name, e.description, Datetime::format(e.start, "%d/%m/%Y %H:%M"), Datetime::format(e.end, "%d/%m/%Y %H:%M")});
         }
         HTML::append(p, t);
         path = File::setextension(path, "html");

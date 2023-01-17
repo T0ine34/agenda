@@ -201,4 +201,18 @@ namespace Utility{
         }
         return min;
     }
+
+    //split a in b parts, return a vector of the parts
+    std::vector<int> divide(int a, int b){
+        size_t crt = 0;
+        std::vector<int> parts;
+        for (int i = 0; i < b; i++){
+            parts.push_back(0);
+        }
+        for (int i = 0; i < a; i++){
+            parts[crt]++;
+            crt++;
+            crt %= b;
+        }
+    }
 }
