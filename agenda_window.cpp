@@ -324,7 +324,6 @@ namespace Agenda_window{
             Datetime_Input::Time_Input input_start_time = Datetime_Input::time_input("Entrez l'heure de début de l'évènement : ");
             Deltatime::Deltatime start_time = Datetime_Input::show(input_start_time, "fr");
             if(start_time == Deltatime::empty_deltatime){ //if the user pressed 'escape' 
-                std::cerr << Deltatime::to_string(start_time) << '\n' << Deltatime::to_string(Deltatime::empty_deltatime) << std::endl;
                 return;
             }
             Datetime_Input::Date_Input input_end_date = Datetime_Input::date_input("Entrez la date de fin de l'évènement : ");
@@ -413,13 +412,7 @@ namespace Datetime_Input{
             output += "─";
         }
         output += "┐\n│";
-        for(int i = 0; i < round(float(width - Utility::getNbchars(date_input.title)) / 2); i++){
-            output += " ";
-        }
-        output += date_input.title;
-        for(int i = 0; i < round(float(width - Utility::getNbchars(date_input.title)) / 2)-1; i++){
-            output += " ";
-        }
+        output += Utility::extend(date_input.title, width+3, ' ', true);
         output += "│\n├";
         for(int i = 0; i < spaces[0]+1+spaces[1]; i++){
             output += "─";
@@ -559,41 +552,93 @@ namespace Datetime_Input{
 
     //return a Datetime object from user input
     std::string create_window(Datetime_Input::Time_Input& time_input, std::string lang){
+        //input for hour and minute, but is very similar to the date input
         unsigned width = 19;
-        (time_input.title.size() > width) ? width = time_input.title.size() : width = width;
+        (Utility::getNbchars(time_input.title) > width) ? width = Utility::getNbchars(time_input.title) : width = width;
+        std::vector<int> spaces = Utility::divide(width-3, 4); //corresponds to the number of spaces between each column
         std::string output = "┌";
         for(unsigned i = 0; i < width; i++){
             output += "─";
         }
         output += "┐\n│";
-        for(int i = 0; i < round(float(width - time_input.title.size()) / 2); i++){
+        output += Utility::extend(time_input.title, width, ' ', true);
+        output += "│\n├";
+        for(int i = 0; i < spaces[0]+1+spaces[1]; i++){
+            output += "─";
+        }
+        output += "┬";
+        for(int i = 0; i < spaces[2]+1+spaces[3]; i++){
+            output += "─";
+        }
+        output += "┤\n│";
+        for(int i = 0; i < spaces[0]; i++){
             output += " ";
         }
-        output += time_input.title;
-        for(int i = 0; i < round(float(width - time_input.title.size()) / 2)-1; i++){
+        output += "ꓥ";
+        for(int i = 0; i < spaces[1]; i++){
             output += " ";
         }
-        output += "│\n├─────────┬─────────┤\n│";
-        output += Utility::extend(Date_Data::hour.at(lang), 9, ' ', true) + "│" + Utility::extend(Date_Data::minute.at(lang), 9, ' ', true) + "│";
-        output += "\n│         │         │";
-        output += "\n│    ꓥ    │    ꓥ    │\n│    ";
-        if (int(time_input.is_hour_selected)){
+        output += "│";
+        for(int i = 0; i < spaces[2]; i++){
+            output += " ";
+        }
+        output += "ꓥ";
+        for(int i = 0; i < spaces[3]; i++){
+            output += " ";
+        }
+        output += "│\n│";
+        for(int i = 0; i < spaces[0]; i++){
+            output += " ";
+        }
+        if (time_input.is_hour_selected){
             output += "\033[30;47m";
         }
         output += Utility::format(time_input.hour, 2);
-        if (int(time_input.is_hour_selected)){
+        if (time_input.is_hour_selected){
             output += "\033[0m";
         }
-        output += "   │    ";
-        if (!int(time_input.is_hour_selected)){
+        for(int i = 0; i < spaces[1]-1; i++){
+            output += " ";
+        }
+        output += "│";
+        for(int i = 0; i < spaces[2]; i++){
+            output += " ";
+        }
+        if (!time_input.is_hour_selected){
             output += "\033[30;47m";
         }
         output += Utility::format(time_input.minute, 2);
-        if (!int(time_input.is_hour_selected)){
+        if (!time_input.is_hour_selected){
             output += "\033[0m";
         }
-        output += "   │\n│    ꓦ    │    ꓦ    │\n└";
-        output += "─────────┴─────────┘\n";
+        for(int i = 0; i < spaces[3]-1; i++){
+            output += " ";
+        }
+        output += "│\n│";
+        for(int i = 0; i < spaces[0]; i++){
+            output += " ";
+        }
+        output += "ꓦ";
+        for(int i = 0; i < spaces[1]; i++){
+            output += " ";
+        }
+        output += "│";
+        for(int i = 0; i < spaces[2]; i++){
+            output += " ";
+        }
+        output += "ꓦ";
+        for(int i = 0; i < spaces[3]; i++){
+            output += " ";
+        }
+        output += "│\n└";
+        for(int i = 0; i < spaces[0]+1+spaces[1]; i++){
+            output += "─";
+        }
+        output += "┴";
+        for(int i = 0; i < spaces[2]+1+spaces[3]; i++){
+            output += "─";
+        }
+        output += "┘\n";
 
         return output;
     }
@@ -604,7 +649,7 @@ namespace Datetime_Input{
     }
 
     void erase(const Datetime_Input::Time_Input& time_input){
-        std::cout << "\033[9A\033[0J" << std::flush;
+        std::cout << "\033[7A\033[0J" << std::flush;
     }
 
 
