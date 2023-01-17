@@ -41,6 +41,9 @@ file/file.o: file/file.hpp utility/utility.hpp
 #getch
 getch/getch.o: getch/getch.hpp getch/key.h
 
+#html
+html/html.o: html/html.hpp file/file.hpp
+
 #menu
 menu/menu.o: menu/menu.hpp utility/utility.hpp getch/getch.hpp
 
