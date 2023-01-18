@@ -236,7 +236,25 @@ namespace Getkey{
                 case 13: return Key::ENTER;
                 case 27: return Key::ESCAPE;
                 case 32: return Key::SPACE;
+
+                case 95: return Key::UNDERSCORE;
+                case 45: return Key::DASH;
+                case 43: return Key::PLUS;
+                case 42: return Key::ASTERISK;
+                case 37: return Key::PERCENT;
+                case 33: return Key::EXCLAMATION;
+                case 63: return Key::QUESTION;
+                case 64: return Key::AT;
+                case 35: return Key::POUND;
+                case 36: return Key::DOLLAR;
+                case 38: return Key::AMPERSAND;
+                case 124: return Key::PIPE;
+                case 39: return Key::QUOTE;
+
+
+
                 default: return Key::UNKNOWN;
+
             }
         }
 
@@ -526,6 +544,7 @@ namespace Getkey{
             case Key::COMMA: return ',';
             case Key::_POINT: return '.';
 
+
             case Key::UNDERSCORE: return '_';
             case Key::DASH: return '-';
             case Key::PLUS: return '+';
@@ -538,9 +557,11 @@ namespace Getkey{
             case Key::DOLLAR: return '$';
             case Key::AMPERSAND: return '&';
             case Key::PIPE: return '|';
-            case Key::SINGLE_QUOTE: return '\'';
+            case Key::QUOTE: return '\'';
 
-            /* //!accent not working in user input for now
+
+            //! accent is not working for now
+            /*
             case Key::A_GRAVE: return 'À';
             case Key::A_ACUTE: return 'Á';
             case Key::A_CIRCUMFLEX: return 'Â';
@@ -593,7 +614,6 @@ namespace Getkey{
             case Key::ae: return 'æ';
             case Key::oe: return 'œ';
             */
-
 
             default: return '\0';
         }

@@ -311,15 +311,7 @@ namespace Input{
         window += "┐\n│ ";
 
         std::string title = titleProcessor(input);
-        unsigned missing_space_1 = ceil(float((input.max_length - Utility::getNbchars(title)-2)) / 2); //space before the title
-        unsigned missing_space_2 = input.max_length - missing_space_1; //space after the title 
-        for (std::size_t i = 0; i < missing_space_1; i++){
-            window += " ";
-        }
-        window += title;
-        for (std::size_t i = 0; i < missing_space_2; i++){
-            window += " ";
-        }
+        window += Utility::extend(title, input.max_length + 1, ' ', true);
 
         window += "│\n│ ";
         //write input.display, with the cursor at cursor_position; add underscore to fill the rest of the window; keep 4 spaces at the beginning and at the end
@@ -431,7 +423,8 @@ namespace Input{
                 return false;
             }
             default:{ //add the char
-                addChar(input, Getkey::getchar(c1));
+                int c = Getkey::getchar(c1);
+                addChar(input, c);
                 break;
             }
         }

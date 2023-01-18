@@ -144,8 +144,8 @@ namespace Utility{
     std::string extend(std::string str, size_t length, char c, bool center){
         if(str.length() < length){
             if(center){
-                int left = (length - str.length()) / 2;
-                int right = length - str.length() - left;
+                int left = (length - Utility::getNbchars(str)) / 2;
+                int right = length - Utility::getNbchars(str) - left;
                 for(int i = 0; i < left; i++){
                     str = c + str;
                 }
@@ -153,7 +153,7 @@ namespace Utility{
                     str = str + c;
                 }
             }else{
-                for(size_t i = 0; i < length - str.length(); i++){
+                for(size_t i = 0; i < length - Utility::getNbchars(str); i++){
                     str = str + c;
                 }
             }
