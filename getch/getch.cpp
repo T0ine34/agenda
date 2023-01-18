@@ -7,6 +7,9 @@
 #include <fstream>
 #include <string>
 
+#include <unistd.h> //for isatty()
+#include <stdio.h> //for fileno()
+
 #include <filesystem>
 namespace fs = std::filesystem;
 
@@ -31,9 +34,9 @@ namespace Getkey{
         }
         else{
             //The code below is for transfering the redirected input to a temporary file, but I can't find a way to detect if the input is redirected from a file or not
-            /*
+            
             //verify if the user redirect the input from a file; if yes, use it
-            if(std::cin.rdbuf()->in_avail() > 0){                           // this line is not working
+            if(!isatty(fileno(stdin))){                         // this line is not working
                 std::string temp_file_path = fs::temp_directory_path().string() + "/getkey_temp_file";
                 std::ofstream temp_file(temp_file_path);
                 temp_file << std::cin.rdbuf();
@@ -45,8 +48,8 @@ namespace Getkey{
             else{
                 use_file_input = false;
             }
-            */
-            use_file_input = false;
+            
+            //use_file_input = false;
         }
         return use_file_input;
     }

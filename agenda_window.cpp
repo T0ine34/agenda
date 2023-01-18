@@ -139,10 +139,11 @@ namespace Agenda_window{
             Display_Agenda d = Display_Agenda();
             d.agenda = a;
             d.selected_date = Datetime::now();
+            d.lang = "fr";
             return d;
         }
 
-        std::string create_window(const Display_Agenda& d){
+        std::string create_window(Display_Agenda& d){
             unsigned int width = 34;
             Utility::getNbchars(d.agenda.name) > width ? width = Utility::getNbchars(d.agenda.name) : width = width;
 
@@ -156,15 +157,6 @@ namespace Agenda_window{
                 s += "─";
             s += "┤\n";
 
-            //display a table with one case for each day, in the selected month and language
-            //we also can selected a day to display the events of this day
-            //set one week per line, first column is monday, last column is sunday
-            int nb_days = Datetime::days_in_month(d.selected_date.year, d.selected_date.month);
-            // first_day is the day of the week of the first day of the month
-            int first_day = Datetime::day_of_week(d.selected_date.year, d.selected_date.month, 1);
-            int nb_weeks = ceil(float(nb_days + first_day) / 7);
-            int day = 1;
-
 
             s += "│ <--" + Utility::extend(Datetime::format(d.selected_date, "%B %Y", d.lang), width-8, ' ', true) + "--> │\n";
 
@@ -173,34 +165,21 @@ namespace Agenda_window{
                 s += "─";
             s += "┤\n";
 
-            for(int i = 0; i < nb_weeks; i++){
-                for(int j = 0; j < 7; j++){
-                    if (i == 0 && j < first_day){
-                        s += "│" + Utility::extend(" ", 4, ' ', true);
-                    }
-                    else if (day <= nb_days){
-                        if (j == d.x && i == d.y){
-                            
-                            s += "│\033[7m" + Utility::extend(std::to_string(day), 4, ' ', true) + "\033[27m";
-                        }
-                        else{
-                            s += "│" + Utility::extend(std::to_string(day), 4, ' ', true);
-                        }
-                        day++;
-                    }
-                    else{
-                        s += "│" + Utility::extend(" ", 4, ' ', true);
-                    }
-                }
-                s += "│\n";
+            std::queue<Agenda::Event::Event> events = Agenda::getEvents(d.agenda, d.selected_date, d.selected_date+Deltatime::deltatime(0,1,0,0,0,0));
+            d.nb_events = events.size();
+            for(size_t i = 0; i < events.size(); ++i){
+                Agenda::Event::Event e = events.front();
+                s += "│" + Utility::extend(Datetime::format(e.start, "%d %b %H:%M", d.lang) + " - " + Datetime::format(e.end, "%d %b %H:%M", d.lang), width, ' ', true) + "│\n";
+                s += "│" + Utility::extend(e.name, width, ' ', true) + "│\n";
+                s += "│" + Utility::extend(e.description, width, ' ', true) + "│\n";
+                s += "│" + Utility::extend("UID : " + e.UID, width, ' ', true) + "│\n";
+                s += "├";
+                for (unsigned i = 0; i < width; i++)
+                    s += "─";
+                s += "┤\n";
             }
 
-            s += "├";
-            for (unsigned i = 0; i < width; i++)
-                s += "─";
-            s += "┤\n";
-
-            s += "│" + Utility::extend("press 'q' for exit", width, ' ', true) + "│\n";
+            s += "│" + Utility::extend("press 'q' or escape for exit", width, ' ', true) + "│\n";
 
             s += "└";
             for (unsigned i = 0; i < width; i++)
@@ -211,70 +190,18 @@ namespace Agenda_window{
         }
 
         void erase(const Display_Agenda& d){
-            int height = 9;
-
-            int nb_days = Datetime::days_in_month(d.selected_date.month, d.selected_date.year);
-            int first_day = Datetime::day_of_week(d.selected_date.year, d.selected_date.month, 1);
-            int nb_weeks = ceil(float(nb_days + first_day) / 7);
-            
-
-            height += nb_weeks;
-
+            int height = 7 + 5*d.nb_events;
             std::cout << "\033[" << height << "A\033[0J";
         }
 
         void action(Display_Agenda& d, const Key& c){
-            int nb_days = Datetime::days_in_month(d.selected_date.month, d.selected_date.year);
-            int first_day = Datetime::day_of_week(d.selected_date);
-            int nb_weeks = ceil(float(nb_days + first_day - 1) / 7);
             switch (c){
-                case Key::ARROW_LEFT:{ //if is_selected_date is true, go to the previous month
-                    if(d.is_selected_date){
-                        d.selected_date -= Deltatime::months(1);
-                    }else{
-                        if(d.x > 0){
-                            d.x--;
-                            d.selected_date = d.selected_date - Deltatime::days(1);
-                        }
-                        else if (d.y > 0){
-                            d.y--;
-                            d.x = 6;
-                            d.selected_date = d.selected_date - Deltatime::days(7);
-                        }
-                    }
+                case Key::ARROW_LEFT:{
+                    d.selected_date -= Deltatime::months(1);
                     break;
                 }
-                case Key::ARROW_RIGHT:{ //if is_selected_date is true, go to the next month
-                    if(d.is_selected_date){
-                        d.selected_date += Deltatime::months(1);
-                    }else{
-                        if(d.x < 6){
-                            d.x++;
-                            d.selected_date = d.selected_date + Deltatime::days(1);
-                        }
-                        else if (d.y < nb_weeks){
-                            d.y++;
-                            d.x = 0;
-                            d.selected_date = d.selected_date + Deltatime::days(7);
-                        }
-                    }
-                    break;
-                }
-                case Key::ARROW_UP:{ //select the case above, if we are on the first line, select the date above the table (to allow to change the month)
-                    if(d.y > 0){
-                        d.y--;
-                        d.selected_date = d.selected_date - Deltatime::days(7);
-                    }
-                    else{
-                        d.is_selected_date = true;
-                    }
-                    break;
-                }
-                case Key::ARROW_DOWN:{ //select the case below, if we are on the date above the table, go to the first line of the table (to allow to change the day)
-                    if(d.y < nb_weeks){
-                        d.y++;
-                        d.selected_date = d.selected_date + Deltatime::days(7);
-                    }
+                case Key::ARROW_RIGHT:{ 
+                    d.selected_date += Deltatime::months(1);
                     break;
                 }
                 case Key::q:{
@@ -289,7 +216,10 @@ namespace Agenda_window{
                     }
                     break;
                 }
-
+                case Key::ESCAPE:{
+                    d.valid_input = true;
+                    break;
+                }
                 default: //other
                     break;
             }

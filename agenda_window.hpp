@@ -25,9 +25,8 @@ namespace Agenda_window{
             Agenda::Agenda agenda;
             std::string lang = "en";
             Datetime::Datetime selected_date = Datetime::now();
-            unsigned short x = selected_date.day % 7;
-            unsigned short y = selected_date.day / 7;
             bool is_selected_date = false;
+            unsigned nb_events = 0;
             bool valid_input = false;
         };
 

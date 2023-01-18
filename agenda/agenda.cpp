@@ -144,6 +144,17 @@ namespace Agenda{
         return result;
     }
 
+    //return a queue of all the events in the agenda a between start and end
+    std::queue<Event::Event> getEvents(const Agenda& a, const Datetime::Datetime& start, const Datetime::Datetime& end){
+        std::queue<Event::Event> result;
+        for (Event::Event e: a.events){
+            if ((e.start >= start && e.end <= end) || (e.end >= start && e.end <= end)){
+                result.push(e);
+            }
+        }
+        return result;
+    }
+
     //export the agenda a in a html file with path
     void exportHTML(Agenda a, fs::path& path){
         HTML::Page p;

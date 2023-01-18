@@ -5,7 +5,7 @@ SRC= $(wildcard *.cpp) $(wildcard */*.cpp) #all source files
 OBJ= $(SRC:.cpp=.o) #all object files
 
 ifeq ($(OS),Windows_NT)
-    RMCMD = del /q
+    RMCMD = del 
 	CDCMD = dir
 	OPERATING_SYSTEM := Windows
 	export EXEC = main.exe
@@ -56,8 +56,8 @@ utility/utility.o: utility/utility.hpp
 .PHONY: clean mrproper
 
 clean:
-	$(RMCMD) *.o
-	$(RMCMD) */*.o
+	$(RMCMD)*.o
+	$(RMCMD)*/*.o
 
 
 mrproper: clean

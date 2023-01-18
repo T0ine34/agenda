@@ -6,6 +6,7 @@
 
 #include <string>
 #include <vector>
+#include <queue>
 #include <tuple>
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -51,6 +52,8 @@ namespace Agenda{
     std::tuple<std::string, std::string> getPrimaryData(const fs::path& path);
 
     unsigned is_file_good(const fs::path& path);
+
+    std::queue<Event::Event> getEvents(const Agenda& a, const Datetime::Datetime& start, const Datetime::Datetime& end);
 
     void exportHTML(Agenda a, fs::path& path);
 }
