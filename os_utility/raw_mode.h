@@ -5,11 +5,11 @@
 
 #ifdef _WIN32 // (Windows)
     #include <windows.h>
-    DWORD original_mode_storage; // saving original mode
+    DWORD original_mode_storage; // for saving original mode
 #elif __linux__ // (Linux)
     #include <termios.h>
     #include <unistd.h>
-    struct termios original_mode_storage; // saving original mode
+    struct termios original_mode_storage; // for saving original mode
 #endif
 
 

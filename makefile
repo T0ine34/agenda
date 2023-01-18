@@ -6,13 +6,11 @@ OBJ= $(SRC:.cpp=.o) #all object files
 
 ifeq ($(OS),Windows_NT)
     RMCMD = del /q
-	RMCMD_REC = /s
 	CDCMD = dir
 	OPERATING_SYSTEM := Windows
 	export EXEC = main.exe
 else
     RMCMD = rm -f
-	RMCMD_REC = -r
 	CDCMD = cd
 	OPERATING_SYSTEM := Linux
 	export EXEC = main.out
@@ -58,7 +56,8 @@ utility/utility.o: utility/utility.hpp
 .PHONY: clean mrproper
 
 clean:
-	$(RMCMD) $(RMCMD_REC) *.o
+	$(RMCMD) *.o
+	$(RMCMD) */*.o
 
 
 mrproper: clean

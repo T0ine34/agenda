@@ -10,10 +10,13 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
+
+
 namespace Getkey{
     
     std::ifstream file_input;
     bool use_file_input = false;
+    bool is_temp_file = false;
     unsigned waiting_time = 0;
 
     bool is_input_from_file(int argc, char** argv){
@@ -21,16 +24,31 @@ namespace Getkey{
             if(fs::is_regular_file(fs::path(argv[1]))){
                 file_input = std::ifstream(argv[1]);
                 use_file_input = true;
-                return true;
             }
             else{
-                std::cerr << "The file " << argv[1] << " does not exist." << std::endl;
-                return false;
+                use_file_input = false;
             }
         }
         else{
-            return false;
+            //The code below is for transfering the redirected input to a temporary file, but I can't find a way to detect if the input is redirected from a file or not
+            /*
+            //verify if the user redirect the input from a file; if yes, use it
+            if(std::cin.rdbuf()->in_avail() > 0){                           // this line is not working
+                std::string temp_file_path = fs::temp_directory_path().string() + "/getkey_temp_file";
+                std::ofstream temp_file(temp_file_path);
+                temp_file << std::cin.rdbuf();
+                temp_file.close();
+                file_input = std::ifstream(temp_file_path);
+                use_file_input = true;
+                is_temp_file = true;
+            }
+            else{
+                use_file_input = false;
+            }
+            */
+            use_file_input = false;
         }
+        return use_file_input;
     }
 
     Key analyse_key(std::string cmd){
@@ -262,6 +280,8 @@ namespace Getkey{
             if(use_file_input){
                 if(file_input.eof()){
                     file_input.close();
+                    if(is_temp_file)
+                        fs::remove(fs::temp_directory_path().string() + "/getkey_temp_file");
                     use_file_input = false;
                     return Key::UNKNOWN;
                 }
@@ -307,7 +327,7 @@ namespace Getkey{
                             }
                             break;
                         }
-                        default: return Key::UNKNOWN;
+                        default: return Key::ESCAPE;
                     }
                     break;
                 }
@@ -346,7 +366,7 @@ namespace Getkey{
                 case 46: return Key::_POINT;
                 case 44: return Key::COMMA;
                 case 59: return Key::SEMICOLON;
-                case 39: return Key::SINGLE_QUOTE;
+                case 39: return Key::QUOTE;
 
                 case 48: return Key::ZERO;
                 case 49: return Key::ONE;
@@ -437,6 +457,8 @@ namespace Getkey{
             if(use_file_input){
                 if(file_input.eof()){
                     file_input.close();
+                    if(is_temp_file)
+                        remove((fs::temp_directory_path().string() + std::string("/getkey_temp_file")).c_str());
                     use_file_input = false;
                     return Key::UNKNOWN;
                 }

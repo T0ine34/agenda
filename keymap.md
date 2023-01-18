@@ -4,6 +4,8 @@
 
 pour démarrer le programme avec le jeu de touche, il suffit de passer le fichier en paramètre de la commande ```main```.
 
+> **Attention**: rediriger le flux d'entrée à partir du fichier ne marchera pas et peut provoquer des actions inattendues.
+
 Exemple avec le fichier ```jeu_de_touche.txt```:
 ```bash
 main jeu_de_touche.txt
@@ -75,3 +77,4 @@ SPACE
 q
 q
 ```	
+> **A noter**: le fichier ne contient pas des caractères, mais des touches. lors d'une saisie de texte, il faut donc entrer un caractère par ligne.
