@@ -74,7 +74,7 @@ namespace Agenda{
             event.pop();
             e.end = Datetime::from_string(event.front(), "%d-%m-%Y-%H-%M");
             event.pop();
-            a.events.push_back(e);
+            addEvent(a, e);
             lines.pop();
         }
         return a;
@@ -178,6 +178,14 @@ namespace Agenda{
         fs::path css = "data/html/style.css";
         HTML::add_stylesheet(p, fs::absolute(css));
         HTML::save(p, path);
+    }
+
+    unsigned deleteAgenda(std::string UID){
+        File::deletefile("data/agenda/" + UID + ".agenda");
+        if (fs::exists("data/agenda/" + UID + ".agenda")){
+            return 1;
+        }
+        return 0;        
     }
 
 }

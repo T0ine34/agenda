@@ -1,12 +1,15 @@
 #include "key.h"
-#include "getch.hpp"
+#include "getkey.hpp"
 
 #include <iostream>
 #include <fstream>
+
 #include <string>
 
 #include <unistd.h> //for isatty()
 #include <stdio.h> //for fileno()
+
+#include <ios>
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -37,7 +40,12 @@ namespace Getkey{
             if(!isatty(fileno(stdin))){
                 std::string temp_file_path = fs::temp_directory_path().string() + "/getkey_temp_file";
                 std::ofstream temp_file(temp_file_path);
-                temp_file << std::cin.rdbuf();
+                while(std::cin){
+                    std::string line;
+                    std::getline(std::cin, line);
+                    temp_file << line << std::endl;
+                }
+                while (std::cin.get() != EOF);
                 temp_file.close();
                 file_input = std::ifstream(temp_file_path);
                 use_file_input = true;
@@ -46,8 +54,6 @@ namespace Getkey{
             else{
                 use_file_input = false;
             }
-            
-            //use_file_input = false;
         }
         return use_file_input;
     }
@@ -453,26 +459,24 @@ namespace Getkey{
 
             }
         }
-
-
+        
         Key getkey(){
             if(use_file_input){
-                int k;
-                file_input >> k;
                 if(file_input.eof()){
                     file_input.close();
-                    if(is_temp_file)
+                    if(is_temp_file){
                         remove((fs::temp_directory_path().string() + std::string("/getkey_temp_file")).c_str());
+                    }
                     use_file_input = false;
-                    return analyse_key(k);
+                    is_temp_file = false;
+                    return getkey();
                 }
                 else{
-                    std::string command;
-                    do{ //ignore comments
-                        command = "";
-                        file_input >> command;
-                    }while (command[0] == '#');
-                    return analyse_key(command);
+                    std::string line;
+                    std::getline(file_input, line);
+                    line = line.substr(0, line.size() - 1);
+                    Key k = analyse_key(line);
+                    return k;
                 }
             }
             else{

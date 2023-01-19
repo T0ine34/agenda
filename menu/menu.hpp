@@ -5,7 +5,7 @@
 #include <vector>
 #include <map>
 
-#include "../getch/getch.hpp"
+#include "../getkey/getkey.hpp"
 
 namespace Menu{
 

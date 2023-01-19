@@ -56,6 +56,8 @@ namespace Agenda{
     std::queue<Event::Event> getEvents(const Agenda& a, const Datetime::Datetime& start, const Datetime::Datetime& end);
 
     void exportHTML(Agenda a, fs::path& path);
+
+    unsigned deleteAgenda(std::string UID);
 }
 
 #endif

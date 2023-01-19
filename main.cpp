@@ -13,7 +13,7 @@
 
 #include "agenda_window.hpp"
 
-#include "getch/key.h"
+#include "getkey/key.h"
 
 // create options for the main menu
 void load_main_menu(Menu::Menu& menu){
@@ -109,6 +109,18 @@ int main(int argc, char** argv){
         }
         else if(mm_res == "delete_agenda"){
             std::string UID = Agenda_window::delete_agenda();
+            if (UID == "q"){
+                Menu::reset(main_menu);
+                continue;
+            }
+            Information::Information info;
+            if (!Agenda::deleteAgenda(UID)){
+                info = Information::information("Agenda supprimé");
+            }
+            else{
+                info = Information::information("Agenda non supprimé");
+            }
+            Information::show(info);
         }
         else if(mm_res == ""){
             running = false;

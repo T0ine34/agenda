@@ -12,7 +12,7 @@
 #include <fstream>
 
 #include "../utility/utility.hpp"
-#include "../getch/getch.hpp"
+#include "../getkey/getkey.hpp"
 
 
 
@@ -599,6 +599,7 @@ namespace Choice{
                     break;
                 }
                 case Key::ESCAPE:{ //escape
+                    erase(choice);
                     return false;
                 }
                 case Key::ENTER:{

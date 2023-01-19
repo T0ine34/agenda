@@ -40,13 +40,13 @@ datetime/deltatime.o: datetime/data.hpp datetime/deltatime.hpp
 file/file.o: file/file.hpp utility/utility.hpp
 
 #getch
-getch/getch.o: getch/getch.hpp getch/key.h
+getkey/getkey.o: getkey/getkey.hpp getkey/key.h
 
 #html
 html/html.o: html/html.hpp file/file.hpp
 
 #menu
-menu/menu.o: menu/menu.hpp utility/utility.hpp getch/getch.hpp
+menu/menu.o: menu/menu.hpp utility/utility.hpp getkey/getkey.hpp
 
 #utility
 utility/utility.o: utility/utility.hpp
