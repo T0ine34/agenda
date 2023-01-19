@@ -107,6 +107,13 @@ namespace Agenda_window{
         return UID;
     }
 
+    void save_agenda(Agenda::Agenda& a){
+        Choice::Choice choice = Choice::choice("sauvegarder l'agenda", "oui", "non", 0);
+        if(Choice::show(choice) == 0){
+            Agenda::save(a);
+        }
+    }
+
     namespace Display_Agenda{
 
         Display_Agenda display_agenda(Agenda::Agenda a){
@@ -249,7 +256,6 @@ namespace Agenda_window{
             }
 
             Agenda::addEvent(a, Agenda::Event::event(name, description, start, end));
-            Agenda::save(a);
             Information::Information info = Information::information("L'évènement '" + name + "' a été ajouté.");
             Information::show(info);
         }
@@ -266,7 +272,6 @@ namespace Agenda_window{
                 return;
             }
             Agenda::removeEvent(a, UID);
-            Agenda::save(a);
             Information::Information info = Information::information("The event" + Agenda::getEvent(a, UID).name + "has been removed.");
             Information::show(info);
         }

@@ -18,6 +18,8 @@ namespace Agenda_window{
     // return the UID of the agenda
     std::string delete_agenda();
 
+    void save_agenda(Agenda::Agenda& a);
+
     namespace Display_Agenda{
         struct Display_Agenda{
             Agenda::Agenda agenda;

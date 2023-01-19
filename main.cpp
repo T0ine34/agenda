@@ -93,6 +93,7 @@ int main(int argc, char** argv){
             }
             Agenda::Agenda agenda = Agenda::load(UID);
             loop_agenda(agenda);
+            Agenda_window::save_agenda(agenda);
             Menu::reset(main_menu);
         }
         else if(mm_res == "load_agenda"){
@@ -103,6 +104,7 @@ int main(int argc, char** argv){
             }
             Agenda::Agenda agenda = Agenda::load(UID);
             loop_agenda(agenda);
+            Agenda_window::save_agenda(agenda);
             Menu::reset(main_menu);
         }
         else if(mm_res == "delete_agenda"){

@@ -151,4 +151,22 @@ namespace Information{
     void erase(const Information& information);
 }
 
+namespace Choice{
+    struct Choice{
+        std::string title;
+        std::string option1;
+        std::string option2;
+        bool is_2_selected;
+    };
+
+    Choice choice(std::string title, std::string option1, std::string option2, bool default_value);
+    Choice choice(std::string title, bool default_value);
+
+    std::string create_window(const Choice& choice);
+
+    bool show(Choice& choice);
+
+    void erase(const Choice& choice);
+}
+
 #endif

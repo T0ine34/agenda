@@ -519,3 +519,102 @@ namespace Information{
         std::cout << "\x1B[" << information.nb_lines+2 << "A\x1B[0J" << std::flush;
     }
 }
+
+namespace Choice{
+    Choice choice(std::string title, std::string option1, std::string option2, bool default_value = 0){
+        Choice c;
+        c.title = title;
+        c.option1 = option1;
+        c.option2 = option2;
+        c.is_2_selected = default_value;
+        return c;
+    }
+
+    Choice choice(std::string title, bool default_value = 0){
+        Choice c;
+        c.title = title;
+        c.option1 = "Yes";
+        c.option2 = "No";
+        c.is_2_selected = default_value;
+        return c;
+    }
+
+    std::string create_window(const Choice& choice){
+        unsigned width = Utility::getNbchars(choice.title);
+        width < (Utility::getNbchars(choice.option1) + 3 + Utility::getNbchars(choice.option2)) ?
+        width = Utility::getNbchars(choice.option1) + 3 + Utility::getNbchars(choice.option2) :
+        width = width;
+
+        unsigned width_opt1 = (width-3)/2;
+        unsigned width_opt2 = width-3-width_opt1;
+
+        std::string window = "┌";
+        for (std::size_t i = 0; i < width + 2; i++){
+            window += "─";
+        }
+        window += "┐\n";
+
+        window += "│ "+Utility::extend(choice.title, width, ' ', true) + " │\n";
+
+        window += "│ ";
+        if(!choice.is_2_selected){
+            window += "\x1B[7m\x1B[37m";
+        }
+        window += Utility::extend(choice.option1, width_opt1, ' ', true);
+        if(!choice.is_2_selected){
+            window += "\x1B[0m";
+        }
+        window += " │ ";
+        if(choice.is_2_selected){
+            window += "\x1B[7m\x1B[37m";
+        }
+        window += Utility::extend(choice.option2, width_opt2, ' ', true);
+        if(choice.is_2_selected){
+            window += "\x1B[0m";
+        }
+        window += " │\n";
+
+        window += "└";
+        for (std::size_t i = 0; i < width + 2; i++){
+            window += "─";
+        }
+        window += "┘";
+
+        return window;
+    }
+
+    // return 0 if the first option is selected, 1 if the second option is selected
+    bool show(Choice& choice){
+        bool continue_choice = true;
+        do{
+            std::cout << create_window(choice) << std::endl;
+            Key c1 = Getkey::getkey();
+            switch (c1){
+                case Key::ARROW_LEFT:{
+                    choice.is_2_selected = false;
+                    break;
+                }
+                case Key::ARROW_RIGHT:{
+                    choice.is_2_selected = true;
+                    break;
+                }
+                case Key::ESCAPE:{ //escape
+                    return false;
+                }
+                case Key::ENTER:{
+                    continue_choice = false;
+                    break;
+                }
+                default:{
+                    break;
+                }
+            }
+            erase(choice);
+        }while(continue_choice);
+        return choice.is_2_selected;
+    }
+
+    void erase(const Choice& choice){
+        std::cout << "\x1B[4A\x1B[0J" << std::flush;
+    }
+}
