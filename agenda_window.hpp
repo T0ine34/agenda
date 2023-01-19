@@ -7,8 +7,6 @@
 #include <string>
 
 namespace Agenda_window{
-    void addEvent(Agenda::Agenda& a);
-
     void removeEvent(Agenda::Agenda& a);
 
     // return the UID of the agenda

@@ -35,6 +35,7 @@ namespace Utility{
     std::string lower(std::string s);
 
     std::string min_size(const std::vector<std::string>& v);
+    std::string max_size(const std::vector<std::string>& v);
 
     std::vector<int> divide(int a, int b);
 }

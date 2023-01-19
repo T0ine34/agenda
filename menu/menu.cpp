@@ -399,6 +399,10 @@ namespace Input{
             }
             case Key::ENTER:{
                 input.valid_input = true;
+                if(Utility::getNbchars(input.value) == 0){
+                    input.value = input.value = ' ';
+                    input.display = ' ';
+                }
                 break;
             }
             case Key::ARROW_LEFT:{
@@ -470,24 +474,30 @@ namespace Information{
         information.message = message;
         return information;
     }
+    Information information(const std::string message,const unsigned max_width){
+        Information information;
+        information.message = message;
+        information.max_width = max_width;
+        return information;
+    }
 
-    std::string create_window(const Information& information){
+    std::string create_window(Information& information){
         // display the message on multiple lines if it is too long (information.max_width), but reduce the width of the window if it is too long
         std::vector<std::string> lines = Utility::split_on_spaces(information.message, information.max_width);
-        unsigned width = Utility::getNbchars(Utility::min_size(lines));
+        information.nb_lines = lines.size();
+        unsigned width = Utility::getNbchars(Utility::max_size(lines));
 
         for (std::size_t i = 0; i < lines.size(); i++){
-            lines[i] = Utility::extend(lines[i], width);
+            lines[i] = Utility::extend(lines[i], width, ' ', true);
         }
-        std::cout << lines.size() << std::endl;
         std::string window = "┌";
         for (std::size_t i = 0; i < width + 2; i++){
             window += "─";
         }
-        window += "┐\n│ ";
+        window += "┐\n";
 
         for (std::size_t i = 0; i < lines.size(); i++){
-            window += lines[i] + " │\n";
+            window += "│ "+lines[i] + " │\n";
         }
 
         window += "└";
@@ -506,6 +516,6 @@ namespace Information{
     }
 
     void erase(const Information& information){
-        std::cout << "\x1B[4A\x1B[0J" << std::flush;
+        std::cout << "\x1B[" << information.nb_lines+2 << "A\x1B[0J" << std::flush;
     }
 }

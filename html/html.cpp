@@ -110,7 +110,6 @@ namespace HTML{
     }
 
     void add_stylesheet(Page& p, const fs::path& stylesheet){
-        std::cerr << stylesheet << std::endl;
         p.stylesheets.push_back(File::read(stylesheet));
     }
 

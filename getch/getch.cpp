@@ -1,8 +1,6 @@
 #include "key.h"
 #include "getch.hpp"
 
-//this is a custom header for adding a getch() function that work on both windows and linux
-
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -36,7 +34,7 @@ namespace Getkey{
             //The code below is for transfering the redirected input to a temporary file, but I can't find a way to detect if the input is redirected from a file or not
             
             //verify if the user redirect the input from a file; if yes, use it
-            if(!isatty(fileno(stdin))){                         // this line is not working
+            if(!isatty(fileno(stdin))){
                 std::string temp_file_path = fs::temp_directory_path().string() + "/getkey_temp_file";
                 std::ofstream temp_file(temp_file_path);
                 temp_file << std::cin.rdbuf();
@@ -281,12 +279,13 @@ namespace Getkey{
 
         Key getkey(){
             if(use_file_input){
+                Key k = analyse_key(file_input.get());
                 if(file_input.eof()){
                     file_input.close();
                     if(is_temp_file)
                         fs::remove(fs::temp_directory_path().string() + "/getkey_temp_file");
                     use_file_input = false;
-                    return Key::UNKNOWN;
+                    return k;
                 }
                 else{
                     std::string command;
@@ -458,12 +457,14 @@ namespace Getkey{
 
         Key getkey(){
             if(use_file_input){
+                int k;
+                file_input >> k;
                 if(file_input.eof()){
                     file_input.close();
                     if(is_temp_file)
                         remove((fs::temp_directory_path().string() + std::string("/getkey_temp_file")).c_str());
                     use_file_input = false;
-                    return Key::UNKNOWN;
+                    return analyse_key(k);
                 }
                 else{
                     std::string command;

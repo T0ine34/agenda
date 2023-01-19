@@ -136,13 +136,15 @@ namespace Information{
     
     struct Information{
         std::string message = "Message";
-        const unsigned max_width = 50;
+        unsigned max_width = 50;
         bool valid_input = false;
+        unsigned nb_lines = 0;
     };
 
     Information information(const std::string message);
+    Information information(const std::string message, const unsigned max_width);
 
-    std::string create_window(const Information& information);
+    std::string create_window(Information& information);
 
     void show(Information& information);
 

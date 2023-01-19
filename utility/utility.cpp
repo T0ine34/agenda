@@ -69,16 +69,17 @@ namespace Utility{
         std::string buffer;
         std::size_t last_space = 0;
         while (s.size()){
-            if (buffer.size() < max_length){
+            if (buffer.size() < max_length){ //if the buffer is not full
                 buffer += s[0];
                 if(s[0] == ' '){
                     last_space = buffer.size();
                 }
             }
-            else if (buffer.size()){
+            else if (buffer.size()){ //if there is something in the buffer
                 if(last_space > 0){
                     elems.push_back(buffer.substr(0, last_space));
                     buffer = buffer.substr(last_space);
+                    buffer += s[0];
                     last_space = 0;
                 }else{
                     elems.push_back(buffer);
@@ -87,8 +88,8 @@ namespace Utility{
             }
             s = s.substr(1);
         }
-        if (buffer.size()){
-            elems.push_back(buffer);
+        if (buffer.size()){ //if there is something left in the buffer
+            elems.push_back(buffer); //add it to the vector
         }
         return elems;
     }
@@ -146,15 +147,15 @@ namespace Utility{
             if(center){
                 int left = (length - Utility::getNbchars(str)) / 2;
                 int right = length - Utility::getNbchars(str) - left;
-                for(int i = 0; i < left; i++){
+                for(int i = 0; i < left; ++i){
                     str = c + str;
                 }
-                for(int i = 0; i < right; i++){
+                for(int i = 0; i < right; ++i){
                     str = str + c;
                 }
             }else{
-                for(size_t i = 0; i < length - Utility::getNbchars(str); i++){
-                    str = str + c;
+                for(size_t i = 0; i < length - Utility::getNbchars(str); ++i){
+                    str += c;
                 }
             }
         }
@@ -195,11 +196,21 @@ namespace Utility{
     std::string min_size(const std::vector<std::string>& v){
         std::string min = v[0];
         for(std::size_t i = 1; i < v.size(); i++){
-            if(v[i].size() < min.size()){
+            if(getNbchars(v[i]) < getNbchars(min)){
                 min = v[i];
             }
         }
         return min;
+    }
+
+    std::string max_size(const std::vector<std::string>& v){
+        std::string max = v[0];
+        for(std::size_t i = 1; i < v.size(); i++){
+            if(getNbchars(v[i]) > getNbchars(max)){
+                max = v[i];
+            }
+        }
+        return max;
     }
 
     //split a in b parts, return a vector of the parts

@@ -2,13 +2,15 @@
 
 ## Utilisation
 
-pour démarrer le programme avec le jeu de touche, il suffit de passer le fichier en paramètre de la commande ```main```.
+pour démarrer le programme avec le jeu de touche, il suffit de passer le fichier en paramètre de la commande ```main```, ou rediriger l'entrée standard à partir du fichier.
 
-> **Attention**: rediriger le flux d'entrée à partir du fichier ne marchera pas et peut provoquer des actions inattendues.
-
-Exemple avec le fichier ```jeu_de_touche.txt```:
+Exemple avec le fichier ```jeu_de_touche.txt``` sous linux:
 ```bash
-main jeu_de_touche.txt
+main.out jeu_de_touche.txt
+```
+ou
+```bash
+main.out < jeu_de_touche.txt
 ```
 
 Une fois le programme arrivée à la fin du fichier, si il se se trouve sur un menu, l'utilisateur reprend le contrôle du programme, si le fichier amène le programme jusqu'à sa fermeture, le programme se ferme.

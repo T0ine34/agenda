@@ -16,32 +16,6 @@
 
 
 namespace Agenda_window{
-
-    void addEvent(Agenda::Agenda& a){
-        //ask for the name of the event, the datetime of the start and the end, and the description
-        Input::Input input = Input::input("nom de l'évènement");
-        std::string name = Input::show(input);
-
-        Datetime_Input::Date_Input date_input = Datetime_Input::date_input("date de début");
-        Datetime::Datetime start = Datetime_Input::show(date_input, "fr");
-        Datetime_Input::Time_Input time_input = Datetime_Input::time_input("heure de début");
-        start += Datetime_Input::show(time_input, "fr");
-
-        date_input = Datetime_Input::date_input("date de fin");
-        Datetime::Datetime end = Datetime_Input::show(date_input, "fr");
-        time_input = Datetime_Input::time_input("heure de fin");
-        end += Datetime_Input::show(time_input, "fr");
-        
-        input = Input::input("description");
-        std::string description = Input::show(input);
-
-        //create the event
-        Agenda::Event::Event event = Agenda::Event::event(name, description, start, end);
-
-        //add the event to the agenda
-        Agenda::addEvent(a, event);
-    }
-
     // this function is used to remove an event from an agenda
     void removeEvent(Agenda::Agenda& a){
         Menu::Menu menu = Menu::menu("supprimer un évènement");
@@ -241,27 +215,27 @@ namespace Agenda_window{
             if(name == ""){ //if the user pressed 'escape' 
                 return;
             }
-            Input::Input input_description = Input::input("Entrez la description de l'évènement : ");
+            Input::Input input_description = Input::input("Entrez la description de l'évènement :");
             std::string description = Input::show(input_description);
             if(description == ""){ //if the user pressed 'escape' 
                 return;
             }
-            Datetime_Input::Date_Input input_start_date = Datetime_Input::date_input("Entrez la date de début de l'évènement : ");
+            Datetime_Input::Date_Input input_start_date = Datetime_Input::date_input("Entrez la date de début de l'évènement :");
             Datetime::Datetime start_date = Datetime_Input::show(input_start_date, "fr");
             if(start_date == Datetime::empty_datetime){ //if the user pressed 'escape' 
                 return;
             }
-            Datetime_Input::Time_Input input_start_time = Datetime_Input::time_input("Entrez l'heure de début de l'évènement : ");
+            Datetime_Input::Time_Input input_start_time = Datetime_Input::time_input("Entrez l'heure de début de l'évènement :");
             Deltatime::Deltatime start_time = Datetime_Input::show(input_start_time, "fr");
             if(start_time == Deltatime::empty_deltatime){ //if the user pressed 'escape' 
                 return;
             }
-            Datetime_Input::Date_Input input_end_date = Datetime_Input::date_input("Entrez la date de fin de l'évènement : ");
+            Datetime_Input::Date_Input input_end_date = Datetime_Input::date_input("Entrez la date de fin de l'évènement :");
             Datetime::Datetime end_date = Datetime_Input::show(input_end_date, "fr");
             if(end_date == Datetime::empty_datetime){ //if the user pressed 'escape' 
                 return;
             }
-            Datetime_Input::Time_Input input_end_time = Datetime_Input::time_input("Entrez l'heure de fin de l'évènement : ");
+            Datetime_Input::Time_Input input_end_time = Datetime_Input::time_input("Entrez l'heure de fin de l'évènement :");
             Deltatime::Deltatime end_time = Datetime_Input::show(input_end_time, "fr");
             if(end_time == Deltatime::empty_deltatime){ //if the user pressed 'escape' 
                 return;
@@ -269,7 +243,7 @@ namespace Agenda_window{
             Datetime::Datetime start = start_date + start_time;
             Datetime::Datetime end = end_date + end_time;
             if(start > end){
-                Information::Information info = Information::information("The start date and time must be before the end date and time.");
+                Information::Information info = Information::information("The start date and time must be before the end date and time.", 35);
                 Information::show(info);
                 return;
             }
@@ -335,14 +309,14 @@ namespace Datetime_Input{
     //return a Datetime object from user input
     std::string create_window(Datetime_Input::Date_Input& date_input, std::string lang){
         unsigned width = 27;
-        (date_input.title.size() > width) ? width = date_input.title.size() : width = width;
+        (Utility::getNbchars(date_input.title) > width) ? width = Utility::getNbchars(date_input.title) : width = width;
         std::vector<int> spaces = Utility::divide(width-5, 6); //corresponds to the number of spaces between each column
         std::string output = "┌";
         for(unsigned i = 0; i < width; i++){
             output += "─";
         }
         output += "┐\n│";
-        output += Utility::extend(date_input.title, width+3, ' ', true);
+        output += Utility::extend(date_input.title, width, ' ', true);
         output += "│\n├";
         for(int i = 0; i < spaces[0]+1+spaces[1]; i++){
             output += "─";
@@ -355,7 +329,7 @@ namespace Datetime_Input{
         for(int i = 0; i < spaces[4]+1+spaces[5]; i++){
             output += "─";
         }
-        output += "┤\n│ ";
+        output += "┤\n│";
         output += Utility::extend(Date_Data::year.at(lang), spaces[0]+1+spaces[1], ' ', true) + "│" + Utility::extend(Date_Data::month.at(lang), spaces[2]+1+spaces[3], ' ', true) + "│" + Utility::extend(Date_Data::day.at(lang), spaces[4]+1+spaces[5], ' ', true) + "│";
         output += "\n│";
         for(int i = 0; i < spaces[0]+1+spaces[1]; i++){
