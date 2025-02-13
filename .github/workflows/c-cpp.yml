@@ -17,3 +17,7 @@ jobs:
       run: ./configure
     - name: make
       run: make
+    - name: upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: main.out

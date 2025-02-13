@@ -1,5 +1,6 @@
 
 #include <string>
+#include <ctime>
 #include <stdexcept>
 
 #include "datetime.hpp"
